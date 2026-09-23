@@ -638,7 +638,10 @@ func TestAC_27590_PsychosisSkipsLowSanity(t *testing.T) {
 
 		// 63795 is a 2.9s cast and target selection only runs once it completes. A cast that
 		// finds nobody expires quietly, so the no-drain half has to burn the whole window.
-		castWindow = 8 * time.Second
+		// Kept well clear of the cast time rather than just over it: a drain that lands late
+		// reads as "never landed" on the half that expects one, and as a clean pass on the
+		// half that does not.
+		castWindow = 25 * time.Second
 
 		// Well ticks every 2s; this only has to outlast the three steps up to sanityStart.
 		rampWindow = 20 * time.Second
